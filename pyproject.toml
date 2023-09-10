@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "meetyou-backend"
+version = "0.1.0"
+description = ""
+authors = ["hans97a <byby8992@naver.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.2.5"
+djangorestframework = "^3.14.0"
+django-environ = "^0.11.2"
+django-cors-headers = "^4.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.0"
+flake8 = "^6.1.0"
+django-debug-toolbar = "^4.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
