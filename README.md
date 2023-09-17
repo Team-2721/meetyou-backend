@@ -1,4 +1,4 @@
-# meetyou-backend
+# MeetU-backend
 야 우리 이날 만나자! 안된다고? 그럼 이날은? 이날도? 아놔;;;;   
 매번 약속 날짜 잡기 어려운 그대를 위한 약속 잡기 어플 미츄입니다 👏   
 
@@ -12,11 +12,10 @@
 - Postgresql 15.3
   
 ### Frontend
-- ?
-- ?
+- Kotlin
+
 ### Design
-- ?
-- ?
+- Pigma
 
 
 ## 🧑‍🤝‍🧑멤버 구성
