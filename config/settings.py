@@ -49,7 +49,9 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-PROJECT_APPS = []
+PROJECT_APPS = [
+    "users.apps.UsersConfig",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -157,3 +159,5 @@ CORS_ALLOWED_ORIGINS = []
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = []
+
+AUTH_USER_MODEL = "users.User"
