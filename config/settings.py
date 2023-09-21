@@ -35,7 +35,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -51,15 +51,20 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     "users.apps.UsersConfig",
+    "core.apps.CoreConfig",
 ]
 
 THIRD_PARTY_APPS = [
+    "daphne",
     "rest_framework",
     "corsheaders",
+    "channels",
+    "drf_yasg",
 ]
 
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + PROJECT_APPS + DJANGO_APPS
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -161,3 +166,18 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = []
 
 AUTH_USER_MODEL = "users.User"
+
+
+# channels settings
+
+ASGI_APPLICATION = "config.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+    # "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
