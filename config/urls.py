@@ -28,7 +28,6 @@ schema_view = get_schema_view(
         title="MeetU",
         default_version="0.1",
         description="MeetU Backend API DOCS",
-        terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="byby8992@naver.com"),  # 부가정보
         license=openapi.License(name="MIT"),  # 부가정보
     ),
@@ -48,9 +47,9 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    path(
-        r"redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc-v1"
-    ),
+    # path(
+    #     r"redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc-v1"
+    # ),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
 ]

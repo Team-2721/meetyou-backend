@@ -179,5 +179,9 @@ CHANNEL_LAYERS = {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
-    # "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
+
+SWAGGER_SETTINGS = {
+    "LOGIN_URL": "http://127.0.0.1:8000/admin" if DEBUG else None,
+    "LOGOUT_URL": "http://127.0.0.1:8000/admin" if DEBUG else None,
 }
