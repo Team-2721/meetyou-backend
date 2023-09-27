@@ -19,6 +19,7 @@ pillow = "^10.0.1"
 boto3 = "^1.28.55"
 psycopg2-binary = "^2.9.6"
 django-storages = "^1.14"
+requests = "^2.31.0"
 
 
 [tool.poetry.group.dev.dependencies]
