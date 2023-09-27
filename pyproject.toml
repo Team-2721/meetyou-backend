@@ -16,6 +16,7 @@ channels-redis = "^4.1.0"
 channels = {extras = ["daphne"], version = "^4.0.0"}
 drf-yasg = "^1.21.7"
 pillow = "^10.0.1"
+boto3 = "^1.28.55"
 
 
 [tool.poetry.group.dev.dependencies]
