@@ -38,6 +38,39 @@ DEBUG = env("DEBUG")
 ALLOWED_HOSTS = [".elasticbeanstalk.com", "127.0.0.1"]
 
 
+if not DEBUG:
+
+    def is_ec2():
+        if os.path.isfile("/sys/devices/virtual/dmi/id/board_asset_tag"):
+            with open("/sys/devices/virtual/dmi/id/board_asset_tag") as f:
+                uuid = f.read()
+                return uuid.startswith("i-")
+        return False
+
+    def get_linux_ec2_private_ip():
+        import requests
+
+        token = requests.put(
+            "http://169.254.169.254/latest/api/token",
+            headers={"X-aws-ec2-metadata-token-ttl-seconds": "3600"},
+        )
+
+        if token.status_code != 200 or not is_ec2():
+            return None
+
+        private_ip = requests.get(
+            "http://169.254.169.254/latest/meta-data/local-ipv4",
+            headers={"X-aws-ec2-metadata-token": token.text},
+        )
+
+        return private_ip.text if private_ip.status_code == 200 else None
+
+    private_ip = get_linux_ec2_private_ip()
+
+    if private_ip:
+        ALLOWED_HOSTS.append(private_ip)
+
+
 # Application definition
 
 DJANGO_APPS = [
