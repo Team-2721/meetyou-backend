@@ -60,6 +60,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "channels",
     "drf_yasg",
+    "storages",
 ]
 
 
