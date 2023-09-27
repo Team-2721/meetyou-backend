@@ -7,8 +7,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            admin = User.objects.get(username="admin")
+            User.objects.get(username="admin")
+            self.stdout.write(self.style.SUCCESS("Superuser Exists"))
+        except:
             User.objects.create_superuser("admin", "admin@naver.com", "12")
             self.stdout.write(self.style.SUCCESS("Superuser Created"))
-        except:
-            self.stdout.write(self.style.SUCCESS("Superuser Exists"))
