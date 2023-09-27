@@ -52,7 +52,6 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
-    "room.apps.RoomConfig",
 ]
 
 THIRD_PARTY_APPS = [
