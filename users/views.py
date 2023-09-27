@@ -11,7 +11,7 @@ from .permissions import IsLogOut
 class MeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(tags=["내 정보 확인"], operation_id="my profile")
+    @swagger_auto_schema(tags=["내 정보 확인 (users/me)"], operation_id="my profile")
     def get(self, request):
         user = request.user
 
@@ -26,7 +26,9 @@ class LoginView(APIView):
     permission_classes = [IsLogOut]
 
     @swagger_auto_schema(
-        tags=["로그인"], request_body=schemata.login_schema, operation_id="user login"
+        tags=["로그인 (users/login)"],
+        request_body=schemata.login_schema,
+        operation_id="user login",
     )
     def post(self, request):
         username = request.data.get("username")
@@ -61,7 +63,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(tags=["로그아웃"], operation_id="user logout")
+    @swagger_auto_schema(tags=["로그아웃 (users/logout)"], operation_id="user logout")
     def post(self, request):
         logout(request)
         return Response({"ok": True})
