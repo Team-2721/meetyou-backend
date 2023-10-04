@@ -67,3 +67,36 @@ class LogoutView(APIView):
     def post(self, request):
         logout(request)
         return Response({"ok": True})
+    
+class UpdateMeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(
+        tags=["회원정보 수정 (users/me/update)"],
+        request_body=schemata.login_schema,
+        operation_id="update my profile",
+    )
+    def patch(self, request):
+        user = request.user
+        serializer = serializers.MeSerializer(user, data=request.data, partial=True)
+        #serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"ok": True, "data": serializer.data})
+        
+        return Response({"ok": False, "detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+class DeleteMeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(
+        tags=["회원탈퇴 (users/me/delete)"], 
+        operation_id="delete my account",
+        )
+    
+    def delete(self, request):
+        user = request.user
+        user.delete()
+
+        return Response({"ok": True}, status=status.HTTP_200_OK)
