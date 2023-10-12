@@ -19,6 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(DEBUG=(bool, False))
 
+# for async orm query
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
 IGNORE_DOT_ENV_FILE = env.bool("IGNORE_DOT_ENV_FILE", default=False)
 
 if not IGNORE_DOT_ENV_FILE:
@@ -85,6 +88,7 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
+    "room.apps.RoomConfig",
 ]
 
 THIRD_PARTY_APPS = [
