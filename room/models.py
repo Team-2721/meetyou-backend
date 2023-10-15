@@ -19,6 +19,11 @@ class Room(TimeStampedModel):
         return self.name
 
 
+class RoomCode(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="code")
+    code = models.CharField(max_length=4, unique=True)
+
+
 class Attendee(TimeStampedModel):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="attendees")
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)

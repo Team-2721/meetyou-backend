@@ -44,3 +44,8 @@ class AttendeeAdmin(admin.ModelAdmin):
 @admin.register(models.Vote)
 class VoteAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.RoomCode)
+class RoomCodeAdmin(admin.ModelAdmin):
+    pass
