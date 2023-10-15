@@ -38,7 +38,7 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(models.Attendee)
 class AttendeeAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
-    fields = ("room", "user", "is_completed", "created_at")
+    fields = ("room", "user", "is_completed", "created_at", "deleted_at")
 
 
 @admin.register(models.Vote)

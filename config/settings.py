@@ -89,6 +89,7 @@ PROJECT_APPS = [
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
     "room.apps.RoomConfig",
+    "notifications.apps.NotificationsConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -101,9 +102,6 @@ THIRD_PARTY_APPS = [
 ]
 
 
-INSTALLED_APPS = THIRD_PARTY_APPS + PROJECT_APPS + DJANGO_APPS
-
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -114,6 +112,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    THIRD_PARTY_APPS.extend(["debug_toolbar"])
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS = ["127.0.0.1"]
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + PROJECT_APPS + DJANGO_APPS
 
 ROOT_URLCONF = "config.urls"
 
