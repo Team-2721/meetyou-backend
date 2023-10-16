@@ -2,12 +2,11 @@ from rest_framework import status
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.db.models import F, Case, When, Subquery, OuterRef, Value, Count, Exists, Q
-from dateutil.relativedelta import relativedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from . import serializers, models
-from core.utils import now_minus_hour_result
+from core.utils import now_minus_hour_result, get_room_code
 
 
 class RoomSearchView(APIView):
@@ -23,20 +22,23 @@ class RoomSearchView(APIView):
             )
         try:
             room_code = models.RoomCode.objects.get(code=code)
-            if room_code.room.created_at <= now_minus_hour_result(12):
+            room = room_code.room
+            attendees = models.Attendee.objects.filter(room=room).count()
+            if (
+                room_code.room.created_at <= now_minus_hour_result(12)
+                or room.attendee_number <= attendees
+            ):
                 room_code.delete()
                 return Response(
                     {"ok": False, "detail": "투표가 끝난 방입니다."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             else:
-                room = room_code.room
                 serializer = serializers.RoomSerializer(
                     room, context={"request": request}
                 )
                 return Response({"ok": True, "data": serializer.data})
         except Exception as e:
-            print(e)
             return Response(
                 {"ok": False, "detail": "유효하지 않는 코드입니다."},
                 status=status.HTTP_404_NOT_FOUND,
@@ -99,6 +101,30 @@ class RoomListView(APIView):
             return Response(
                 {"ok": False, "detail": f"Server got Error ({e})"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    def post(self, request):
+        user = request.user
+        data = request.data.copy()
+        data["manager"] = user.pk
+
+        serializer = serializers.RoomSerializer(data=data)
+
+        if serializer.is_valid():
+            room = serializer.save()
+            for _ in range(10000):
+                try:
+                    models.RoomCode.objects.create(room=room, code=get_room_code())
+                    break
+                except:
+                    pass
+            return Response(
+                {"ok": True, "detail": "방이 생성되었습니다."}, status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response(
+                {"ok": False, "detail": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 

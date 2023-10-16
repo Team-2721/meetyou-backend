@@ -21,6 +21,7 @@ class RoomSerializer(serializers.ModelSerializer):
         model = models.Room
         fields = (
             "pk",
+            "manager",
             "name",
             "attendee_number",
             "start_date",
@@ -28,6 +29,7 @@ class RoomSerializer(serializers.ModelSerializer):
             "comment",
             "attendees",
         )
+        extra_kwargs = {"manager": {"write_only": True}}
 
     def get_attendees(self, obj):
         attendees = obj.attendees.select_related("user").all()
@@ -36,6 +38,14 @@ class RoomSerializer(serializers.ModelSerializer):
             attendees, many=True, context={"request": self.context.get("request")}
         )
         return serializer.data
+
+    def validate(self, data):
+        start_date = data.get("start_date")
+        end_date = data.get("end_date")
+        diff = end_date - start_date
+        if diff.days > 31:
+            raise serializers.ValidationError("약속 시작일과 마감일이 31일을 초과할 수 없습니다.")
+        return data
 
 
 class RoomDetailSerializer(RoomSerializer):
@@ -70,10 +80,11 @@ class AttendedRoomListSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(source="room.pk")
     status = serializers.CharField()
     code = serializers.SerializerMethodField(read_only=True)
+    comment = serializers.CharField(source="room.comment")
 
     class Meta:
         model = models.Attendee
-        fields = ("pk", "name", "attendee_number", "date", "status", "code")
+        fields = ("pk", "name", "attendee_number", "date", "status", "code", "comment")
 
     def get_date(self, obj):
         start_date = obj.room.start_date
