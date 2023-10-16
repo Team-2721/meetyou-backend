@@ -97,7 +97,6 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
     "channels",
-    "drf_yasg",
     "storages",
 ]
 
@@ -238,10 +237,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-SWAGGER_SETTINGS = {
-    "LOGIN_URL": "http://127.0.0.1:8000/admin" if DEBUG else None,
-    "LOGOUT_URL": "http://127.0.0.1:8000/admin" if DEBUG else None,
-}
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "core.pagination.CustomResultsSetPagination",
