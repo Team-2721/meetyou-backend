@@ -35,8 +35,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             return
 
-        if not user.is_authenticated:  # <- not 삭제
-            user = await get_user("admin")  # <- 삭제
+        if user.is_authenticated:
             self.attendee, _ = models.Attendee.objects.get_or_create(
                 user=user, room=self.room
             )
