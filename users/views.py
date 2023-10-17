@@ -35,6 +35,35 @@ class MeView(APIView):
             {"ok": True, "data": serializer.data}, status=status.HTTP_200_OK
         )
 
+    @swagger_auto_schema(
+        tags=["회원정보 수정 (users/me/update)"],
+        request_body=schemata.login_schema,
+        operation_id="update my profile",
+    )
+    #수정
+    def patch(self, request):
+        user = request.user
+        serializer = serializers.MeSerializer(user, data=request.data, partial=True)
+        #serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"ok": True, "data": serializer.data})
+        
+        return Response({"ok": False, "detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @swagger_auto_schema(
+        tags=["회원정보 탈퇴 (users/me/delete)"],
+        request_body=schemata.login_schema,
+        operation_id="delete my profile",
+    )
+    #삭제
+    def delete(self, request):
+        user = request.user
+        user.delete()
+
+        return Response({"ok": True}, status=status.HTTP_200_OK)
+
 
 class LoginView(APIView):
     permission_classes = [IsLogOut]
@@ -103,7 +132,7 @@ class UpdateMeView(APIView):
         return Response({"ok": False, "detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
     @swagger_auto_schema(
-        tags=["회원정보 삭제 (users/delete)"],
+        tags=["회원정보 탈퇴 (users/delete)"],
         request_body=schemata.login_schema,
         operation_id="delete my profile",
     )

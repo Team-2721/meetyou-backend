@@ -27,16 +27,26 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         username = data['username']
-        
-        # ID validation: at least 8 characters long and must include a special character or number and a letter
-        if len(username) < 8 or not re.search('[A-Za-z]', username) or not re.search('[0-9!@#$%^&*(),.?":{}|<>]', username):
-            raise serializers.ValidationError(
-                {"username": "ID 는 최소 8 글자이상이여야 하고, 특수문자나 숫자를 포함해야 합니다."}
-            )
+        password = data['password']
+        nickname = data['nickname']
 
+        # ID validation:  8~15자 / 영문 + 대소문자만... ( 특수문자 x )
+        if not re.match(r'^[A-Za-z0-9]{8,15}$', username):
+            raise serializers.ValidationError(
+                {"username": "ID는 최소 8글자에서 최대 15글자까지 가능하며, 영문 대소문자와 숫자만 포함해야 합니다."}
+            )
+        # password validation
         if data['password'] != data['password2']:
             raise serializers.ValidationError(
-                {"password": "Password fields didn't match."}
+                {"password": "비밀번호가 일치하지 않습니다."}
+            )
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,15}$', password):
+            raise serializers.ValidationError(
+                {"password": "비밀번호는 최소 8글자에서 최대 15글자까지 가능하며, 영문 대소문자, 숫자 및 특수문자를 포함해야 합니다."}
+            )
+        if not re.match(r'^.{2,20}$', nickname) or re.match(r'^[ㄱ-ㅎㅏ-ㅣ]+$', nickname):
+            raise serializers.ValidationError(
+                {"nickname": "닉네임은 최소 2글자에서 최대 20글자까지 가능하며, 자음만으로 이루어질 수 없습니다."}
             )
 
         return data
@@ -68,3 +78,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 #  "password2": "dkssud!!",
 #  "nickname": "nickname"
 #  }
+
+
+# {
+# "username": "kyungbo97",
+#  "password": "kyung3516@@",
+#   "password2": "kyung3516@@",
+#   "nickname": "nickname"
+#   }
