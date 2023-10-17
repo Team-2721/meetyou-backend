@@ -3,18 +3,14 @@ from django.contrib.auth.models import User
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-from . import serializers, schemata
+from . import serializers
 from .permissions import IsLogOut
 from .serializers import RegisterSerializer
 
-#회원가입
+# 회원가입
+
 
 class RegisterUserView(APIView):
-    
-    @swagger_auto_schema(tags=["회원가입 (users/register)"], operation_id="register")
-
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -22,10 +18,10 @@ class RegisterUserView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class MeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(tags=["내 정보 확인 (users/me)"], operation_id="my profile")
     def get(self, request):
         user = request.user
 
@@ -35,29 +31,22 @@ class MeView(APIView):
             {"ok": True, "data": serializer.data}, status=status.HTTP_200_OK
         )
 
-    @swagger_auto_schema(
-        tags=["회원정보 수정 (users/me/update)"],
-        request_body=schemata.login_schema,
-        operation_id="update my profile",
-    )
-    #수정
+    # 수정
     def patch(self, request):
         user = request.user
         serializer = serializers.MeSerializer(user, data=request.data, partial=True)
-        #serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
+        # serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
 
         if serializer.is_valid():
             serializer.save()
             return Response({"ok": True, "data": serializer.data})
-        
-        return Response({"ok": False, "detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
-    @swagger_auto_schema(
-        tags=["회원정보 탈퇴 (users/me/delete)"],
-        request_body=schemata.login_schema,
-        operation_id="delete my profile",
-    )
-    #삭제
+
+        return Response(
+            {"ok": False, "detail": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 삭제
     def delete(self, request):
         user = request.user
         user.delete()
@@ -68,11 +57,6 @@ class MeView(APIView):
 class LoginView(APIView):
     permission_classes = [IsLogOut]
 
-    @swagger_auto_schema(
-        tags=["로그인 (users/login)"],
-        request_body=schemata.login_schema,
-        operation_id="user login",
-    )
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -106,40 +90,32 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(tags=["로그아웃 (users/logout)"], operation_id="user logout")
     def post(self, request):
         logout(request)
         return Response({"ok": True})
-    
+
+
 class UpdateMeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @swagger_auto_schema(
-        tags=["회원정보 수정 (users/update)"],
-        request_body=schemata.login_schema,
-        operation_id="update my profile",
-    )
-    #수정
+    # 수정
     def patch(self, request):
         user = request.user
         serializer = serializers.MeSerializer(user, data=request.data, partial=True)
-        #serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
+        # serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
 
         if serializer.is_valid():
             serializer.save()
             return Response({"ok": True, "data": serializer.data})
-        
-        return Response({"ok": False, "detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
-    @swagger_auto_schema(
-        tags=["회원정보 탈퇴 (users/delete)"],
-        request_body=schemata.login_schema,
-        operation_id="delete my profile",
-    )
-    #삭제
+
+        return Response(
+            {"ok": False, "detail": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 삭제
     def delete(self, request):
         user = request.user
         user.delete()
 
         return Response({"ok": True}, status=status.HTTP_200_OK)
-    

@@ -92,7 +92,6 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
     "channels",
-    "drf_yasg",
     "storages",
 ]
 
