@@ -31,9 +31,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         nickname = data['nickname']
 
         # ID validation:  8~15자 / 영문 + 대소문자만... ( 특수문자 x )
-        if not re.match(r'^[A-Za-z0-9]{8,15}$', username):
+        if not re.match(r'^[A-Za-z0-9]{4,15}$', username):
             raise serializers.ValidationError(
-                {"username": "ID는 최소 8글자에서 최대 15글자까지 가능하며, 영문 대소문자와 숫자만 포함해야 합니다."}
+                {"username": "ID는 최소 4글자에서 최대 15글자까지 가능하며, 영문 대소문자와 숫자만 포함해야 합니다."}
             )
         # password validation
         if data['password'] != data['password2']:
@@ -63,26 +63,3 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
-#비밀번호 검증식 잘 타는지 예시
-# {
-# "username": "bobo2",
-# "password": "1234",
-# "password2": "1234",
-# "nickname": "nickname"
-# }
-
-#아이디 검증식 잘 타는지 예시
-#  {
-#  "username": "1",
-#  "password": "dkssud!!",
-#  "password2": "dkssud!!",
-#  "nickname": "nickname"
-#  }
-
-
-# {
-# "username": "kyungbo97",
-#  "password": "kyung3516@@",
-#   "password2": "kyung3516@@",
-#   "nickname": "nickname"
-#   }
