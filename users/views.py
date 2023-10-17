@@ -1,9 +1,22 @@
 from django.contrib.auth import login, logout, get_user_model
+from django.contrib.auth.models import User
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from . import serializers
 from .permissions import IsLogOut
+from .serializers import RegisterSerializer
+
+# 회원가입
+
+
+class RegisterUserView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MeView(APIView):
@@ -17,6 +30,28 @@ class MeView(APIView):
         return Response(
             {"ok": True, "data": serializer.data}, status=status.HTTP_200_OK
         )
+
+    # 수정
+    def patch(self, request):
+        user = request.user
+        serializer = serializers.MeSerializer(user, data=request.data, partial=True)
+        # serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"ok": True, "data": serializer.data})
+
+        return Response(
+            {"ok": False, "detail": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 삭제
+    def delete(self, request):
+        user = request.user
+        user.delete()
+
+        return Response({"ok": True}, status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
@@ -58,3 +93,29 @@ class LogoutView(APIView):
     def post(self, request):
         logout(request)
         return Response({"ok": True})
+
+
+class UpdateMeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    # 수정
+    def patch(self, request):
+        user = request.user
+        serializer = serializers.MeSerializer(user, data=request.data, partial=True)
+        # serializer = MeSerializer(user, data=request.data, partial=True)  # partial=True to update a data partially
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"ok": True, "data": serializer.data})
+
+        return Response(
+            {"ok": False, "detail": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 삭제
+    def delete(self, request):
+        user = request.user
+        user.delete()
+
+        return Response({"ok": True}, status=status.HTTP_200_OK)
