@@ -40,7 +40,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"password": "비밀번호가 일치하지 않습니다."}
             )
-        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,15}$', password):
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*(),.?":{}|<>])[A-Za-z\d~!@#$%^&*(),.?":{}|<>]{8,15}$', password):
             raise serializers.ValidationError(
                 {"password": "비밀번호는 최소 8글자에서 최대 15글자까지 가능하며, 영문 대소문자, 숫자 및 특수문자를 포함해야 합니다."}
             )
