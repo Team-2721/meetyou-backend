@@ -9,6 +9,7 @@ class User(AbstractUser):
     avatar = models.ImageField(
         upload_to=upload_to("avatars", True), blank=True, verbose_name="프로필 사진"
     )
+    alert_allowed = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "회원 목록"
