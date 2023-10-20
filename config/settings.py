@@ -19,6 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(DEBUG=(bool, False))
 
+# for async orm query
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
 IGNORE_DOT_ENV_FILE = env.bool("IGNORE_DOT_ENV_FILE", default=False)
 
 if not IGNORE_DOT_ENV_FILE:
@@ -85,6 +88,8 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
+    "room.apps.RoomConfig",
+    "notifications.apps.NotificationsConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -94,9 +99,6 @@ THIRD_PARTY_APPS = [
     "channels",
     "storages",
 ]
-
-
-INSTALLED_APPS = THIRD_PARTY_APPS + PROJECT_APPS + DJANGO_APPS
 
 
 MIDDLEWARE = [
@@ -109,6 +111,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    THIRD_PARTY_APPS.extend(["debug_toolbar"])
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS = ["127.0.0.1"]
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + PROJECT_APPS + DJANGO_APPS
 
 ROOT_URLCONF = "config.urls"
 
@@ -227,10 +237,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-SWAGGER_SETTINGS = {
-    "LOGIN_URL": "http://127.0.0.1:8000/admin" if DEBUG else None,
-    "LOGOUT_URL": "http://127.0.0.1:8000/admin" if DEBUG else None,
-}
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "core.pagination.CustomResultsSetPagination",

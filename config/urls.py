@@ -21,10 +21,10 @@ from django.urls.conf import include
 from django.conf.urls.static import static
 from rest_framework import permissions
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
+    path("rooms/", include("room.urls")),
 ]
 
 
