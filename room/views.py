@@ -34,6 +34,9 @@ class RoomSearchView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             else:
+                attendee, _ = models.Attendee.objects.get_or_create(
+                    room=room, user=request.user
+                )
                 serializer = serializers.RoomSerializer(
                     room, context={"request": request}
                 )
@@ -112,6 +115,7 @@ class RoomListView(APIView):
 
         if serializer.is_valid():
             room = serializer.save()
+            models.Attendee.objects.create(room=room, user=user)
             for _ in range(10000):
                 try:
                     models.RoomCode.objects.create(room=room, code=get_room_code())
@@ -166,3 +170,7 @@ class RoomDetailView(APIView):
                 {"ok": False, "detail": "비정상적인 접근입니다."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+# 방 생성은 data를 빼도 됨.
+# 다른 검은 체크 박스는 api 문서 최신화 필요

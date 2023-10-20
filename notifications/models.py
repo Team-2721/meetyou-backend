@@ -6,5 +6,5 @@ class Notification(TimeStampedModel):
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="notifications"
     )
+    room = models.ForeignKey("room.Room", on_delete=models.CASCADE)
     message = models.CharField(max_length=100)
-    is_read = models.BooleanField(default=False)
