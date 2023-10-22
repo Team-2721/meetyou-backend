@@ -100,10 +100,20 @@ class AttendedRoomListSerializer(serializers.ModelSerializer):
     status = serializers.CharField()
     code = serializers.SerializerMethodField(read_only=True)
     comment = serializers.CharField(source="room.comment")
+    memo = serializers.CharField(source="room.comment")
 
     class Meta:
         model = models.Attendee
-        fields = ("pk", "name", "attendee_number", "date", "status", "code", "comment")
+        fields = (
+            "pk",
+            "name",
+            "attendee_number",
+            "date",
+            "status",
+            "code",
+            "comment",
+            "memo",
+        )
 
     def get_date(self, obj):
         start_date = obj.room.start_date
