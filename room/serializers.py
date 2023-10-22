@@ -14,6 +14,18 @@ class AttendeeInfoSerializer(serializers.ModelSerializer):
         fields = ("pk", "nickname", "avatar")
 
 
+class AttendeeProfileVoteDateSerializer(AttendeeInfoSerializer):
+    votes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Attendee
+        fields = AttendeeInfoSerializer.Meta.fields + ("votes",)
+
+    def get_votes(self, obj):
+        votes = models.Vote.objects.filter(attendee=obj).order_by("date")
+        return [vote.date.strftime("%Y-%m-%d") for vote in votes]
+
+
 class RoomSerializer(serializers.ModelSerializer):
     attendees = serializers.SerializerMethodField(read_only=True)
 
@@ -54,6 +66,13 @@ class RoomDetailSerializer(RoomSerializer):
     class Meta:
         model = models.Room
         fields = RoomSerializer.Meta.fields + ("results",)
+        extra_kwargs = {"manager": {"write_only": True}}
+
+    def get_attendees(self, obj):
+        attendees = obj.attendees.select_related("user").all()
+        return AttendeeProfileVoteDateSerializer(
+            attendees, many=True, context={"request": self.context.get("request")}
+        ).data
 
     def get_results(self, obj):
         if obj.created_at >= now_minus_hour_result(12):

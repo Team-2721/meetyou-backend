@@ -37,10 +37,12 @@ class RoomSearchView(APIView):
                 attendee, _ = models.Attendee.objects.get_or_create(
                     room=room, user=request.user
                 )
-                serializer = serializers.RoomSerializer(
+                serializer = serializers.RoomDetailSerializer(
                     room, context={"request": request}
                 )
-                return Response({"ok": True, "data": serializer.data})
+                data = serializer.data
+                del data["results"]
+                return Response({"ok": True, "data": data})
         except Exception as e:
             return Response(
                 {"ok": False, "detail": "유효하지 않는 코드입니다."},
@@ -81,7 +83,7 @@ class RoomListView(APIView):
                 )
             )
             .filter(user=user, deleted_at__isnull=True)
-            .order_by("status")
+            .order_by("-pk")
         )
 
         try:
