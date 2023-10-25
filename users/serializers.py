@@ -30,6 +30,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = data['password']
         nickname = data['nickname']
 
+
         # ID validation:  8~15자 / 영문 + 대소문자만... ( 특수문자 x )
         if not re.match(r'^[A-Za-z0-9]{4,15}$', username):
             raise serializers.ValidationError(

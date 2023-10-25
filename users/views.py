@@ -18,7 +18,21 @@ class RegisterUserView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#id중복확인
+class CheckUsernameView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        if username is None:
+            return Response({"ok": False, "detail": "username을 입력해 주세요."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
+        if User.objects.filter(username=username).exists():
+            return Response({"ok": False, "detail": "이미 사용 중인 ID입니다."},
+                            status=status.HTTP_409_CONFLICT)
+        else:
+            return Response({"ok": True, "detail": "사용 가능한 ID입니다."},
+                            status=status.HTTP_200_OK)
+        
 class MeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
