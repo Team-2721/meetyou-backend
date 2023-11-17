@@ -25,13 +25,11 @@ class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
         self.room_group_name = f"chat_{self.room_pk}"
-
         user = self.scope["user"]
 
         try:
             with transaction.atomic():
                 self.room = models.Room.objects.get(pk=self.room_pk)
-
         except Exception as e:
             return
 
@@ -39,10 +37,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
             self.attendee, _ = models.Attendee.objects.get_or_create(
                 user=user, room=self.room
             )
-
-            await login(
-                self.scope, user
-            )  # 아래 코드에서 그룹 추가하는 건 해당 사람이 알림 켰는지 확인하고 나서 group_add 실행
+            # 아래 코드에서 그룹 추가하는 건 해당 사람이 알림 켰는지 확인하고 나서 group_add 실행
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
             await self.accept()
         else:
@@ -91,11 +86,13 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     if attendees_number == room.attendee_number:  # 알림 전 체크 후 전송
                         Notification.objects.create(
                             user=user,
+                            room=room,
                             message=f"{room.name}의 모든 투표가 완료되었습니다. 결과를 확인해 주세요!",
                         )
                         await self.channel_layer.group_send(
                             self.room_group_name,
                             {
+                                "ok": True,
                                 "message": "모든 투표가 완료되었습니다. 결과를 확인해 주세요!",
                                 "room": room.pk,
                                 "type": "chat.message",
@@ -107,12 +104,16 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     else:
                         await self.send(
                             text_data=json.dumps(
-                                {"message": "투표 완료되었습니다. 다른 참가자들이 모두 투표 하면 알려드릴게요!"}
+                                {
+                                    "message": "투표 완료되었습니다. 다른 참가자들이 모두 투표 하면 알려드릴게요!",
+                                    "ok": True,
+                                }
                             )
                         )
 
             except Exception as e:
-                self.send(text_data=json.dumps({"message": e}))
+                print("웹소켓 에러 ! -> ", e)
+                # self.send(text_data=json.dumps({"message": e}))
 
     async def chat_message(self, event):
         await self.send(

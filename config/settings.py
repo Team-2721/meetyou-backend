@@ -233,7 +233,9 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [
+                ("meetyou-redis-ro.d5ou47.ng.0001.apn2.cache.amazonaws.com", 6379)
+            ],
         },
     },
 }
