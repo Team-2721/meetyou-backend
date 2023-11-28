@@ -13,12 +13,13 @@ djangorestframework = "^3.14.0"
 django-environ = "^0.11.2"
 django-cors-headers = "^4.2.0"
 channels-redis = "^4.1.0"
-channels = {extras = ["daphne"], version = "^4.0.0"}
+channels = {version = "3.0.3", extras = ["daphne"]}
 pillow = "^10.0.1"
 boto3 = "^1.28.55"
 psycopg2-binary = "^2.9.6"
 django-storages = "^1.14"
 requests = "^2.31.0"
+gunicorn = "20.0.4"
 
 
 [tool.poetry.group.dev.dependencies]

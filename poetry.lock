@@ -240,23 +240,22 @@ pycparser = "*"
 
 [[package]]
 name = "channels"
-version = "4.0.0"
-description = "Brings async, event-driven capabilities to Django 3.2 and up."
+version = "3.0.3"
+description = "Brings async, event-driven capabilities to Django. Django 2.2 and up only."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 files = [
-    {file = "channels-4.0.0-py3-none-any.whl", hash = "sha256:2253334ac76f67cba68c2072273f7e0e67dbdac77eeb7e318f511d2f9a53c5e4"},
-    {file = "channels-4.0.0.tar.gz", hash = "sha256:0ce53507a7da7b148eaa454526e0e05f7da5e5d1c23440e4886cf146981d8420"},
+    {file = "channels-3.0.3-py3-none-any.whl", hash = "sha256:3f15bdd2138bb4796e76ea588a0a344b12a7964ea9b2e456f992fddb988a4317"},
+    {file = "channels-3.0.3.tar.gz", hash = "sha256:056b72e51080a517a0f33a0a30003e03833b551d75394d6636c885d4edb8188f"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.5.0,<4"
-daphne = {version = ">=4.0.0", optional = true, markers = "extra == \"daphne\""}
-Django = ">=3.2"
+asgiref = ">=3.2.10,<4"
+daphne = ">=3.0,<4"
+Django = ">=2.2"
 
 [package.extras]
-daphne = ["daphne (>=4.0.0)"]
-tests = ["async-timeout", "coverage (>=4.5,<5.0)", "pytest", "pytest-asyncio", "pytest-django"]
+tests = ["async-generator", "async-timeout", "coverage (>=4.5,<5.0)", "pytest", "pytest-asyncio", "pytest-django"]
 
 [[package]]
 name = "channels-redis"
@@ -446,22 +445,22 @@ test-randomorder = ["pytest-randomly"]
 
 [[package]]
 name = "daphne"
-version = "4.0.0"
+version = "3.0.2"
 description = "Django ASGI (HTTP/WebSocket) server"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 files = [
-    {file = "daphne-4.0.0-py3-none-any.whl", hash = "sha256:a288ece46012b6b719c37150be67c69ebfca0793a8521bf821533bad983179b2"},
-    {file = "daphne-4.0.0.tar.gz", hash = "sha256:cce9afc8f49a4f15d4270b8cfb0e0fe811b770a5cc795474e97e4da287497666"},
+    {file = "daphne-3.0.2-py3-none-any.whl", hash = "sha256:a9af943c79717bc52fe64a3c236ae5d3adccc8b5be19c881b442d2c3db233393"},
+    {file = "daphne-3.0.2.tar.gz", hash = "sha256:76ffae916ba3aa66b46996c14fa713e46004788167a4873d647544e750e0e99f"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.5.2,<4"
-autobahn = ">=22.4.2"
-twisted = {version = ">=22.4", extras = ["tls"]}
+asgiref = ">=3.2.10,<4"
+autobahn = ">=0.18"
+twisted = {version = ">=18.7", extras = ["tls"]}
 
 [package.extras]
-tests = ["django", "hypothesis", "pytest", "pytest-asyncio"]
+tests = ["hypothesis (==4.23)", "pytest (>=3.10,<4.0)", "pytest-asyncio (>=0.8,<1.0)"]
 
 [[package]]
 name = "django"
@@ -581,6 +580,26 @@ files = [
 mccabe = ">=0.7.0,<0.8.0"
 pycodestyle = ">=2.11.0,<2.12.0"
 pyflakes = ">=3.1.0,<3.2.0"
+
+[[package]]
+name = "gunicorn"
+version = "20.0.4"
+description = "WSGI HTTP Server for UNIX"
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "gunicorn-20.0.4-py2.py3-none-any.whl", hash = "sha256:cd4a810dd51bf497552cf3f863b575dabd73d6ad6a91075b65936b151cbf4f9c"},
+    {file = "gunicorn-20.0.4.tar.gz", hash = "sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626"},
+]
+
+[package.dependencies]
+setuptools = ">=3.0"
+
+[package.extras]
+eventlet = ["eventlet (>=0.9.7)"]
+gevent = ["gevent (>=0.13)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
 
 [[package]]
 name = "hyperlink"
@@ -1296,4 +1315,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c95cf0bb9525cb52a7e51153d8a5b9fec2e7d78a02dd0e8d5d0e22ebe88ab5fd"
+content-hash = "d6995d012fbe9f10644d393219aa203822dddbcf8d217a0871bd3ac6f263f6a1"
