@@ -23,9 +23,7 @@ from room import routings
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
-        "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(routings.websocket_urlpatterns))
-        ),
+        "websocket": AuthMiddlewareStack(URLRouter(routings.websocket_urlpatterns)),
     },
 )
 # https://channels.readthedocs.io/en/latest/tutorial/part_2.html
