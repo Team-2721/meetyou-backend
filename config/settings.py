@@ -224,6 +224,8 @@ CSRF_TRUSTED_ORIGINS = []
 
 AUTH_USER_MODEL = "users.User"
 
+LANGUAGE_SESSION_KEY = "_language"
+
 
 # channels settings
 

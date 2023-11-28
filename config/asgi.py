@@ -16,14 +16,15 @@ django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from channels.security.websocket import AllowedHostsOriginValidator
-from room import routings
+
+# from channels.security.websocket import AllowedHostsOriginValidator
+from room import routing
 
 
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
-        "websocket": AuthMiddlewareStack(URLRouter(routings.websocket_urlpatterns)),
+        "websocket": AuthMiddlewareStack(URLRouter(routing.websocket_urlpatterns)),
     },
 )
 # https://channels.readthedocs.io/en/latest/tutorial/part_2.html
